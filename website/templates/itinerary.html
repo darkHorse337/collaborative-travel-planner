@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>User Itinerary</title>
+    <meta name="description" content="">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/itinerary.css">
+    <link rel = "stylesheet" href = "static/fonts.css">
+    <!-- normalize css -->
+    <link rel = "stylesheet" href = "static/normalize.css">
+    <!-- custom css -->
+    <link rel = "stylesheet" href = "static/WanderSync.css">
+    <link rel = "stylesheet" href = "static/responsive.css">
+</head>
+ <style>
+        button {
+            background-color: #ddd;
+            border: none;
+            color: black;
+            padding: 1px 1px;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+    </style>
+<body>
+
+     <nav class = "navbar">
+            <div class = "container flex">
+                <a href = "{{ url_for('auth.protected') }}" class = "site-brand">
+                    Wander<span>Sync</span>
+                </a>
+
+                <button type = "button" id = "navbar-show-btn" class = "flex">
+                    <i class = "fas fa-bars"></i>
+                </button>
+                <div id = "navbar-collapse">
+                    <button type = "button" id = "navbar-close-btn" class = "flex">
+                        <i class = "fas fa-times"></i>
+                    </button>
+                    <ul class = "navbar-nav">
+                        <li class = "nav-item">
+
+                            <a href = "{{ url_for('auth.protected') }}" class = 'nav-link'>Home</a>
+                        </li>
+                        <li class = "nav-item">
+                            <a href = "{{ url_for('auth.recommendation') }}" class = 'nav-link'>Recommendations</a>
+                        </li>
+
+                        <li class = "nav-item">
+                            <a href="{{ url_for('auth.about') }}" class="nav-link">About</a>
+                        </li>
+                        <li class = "nav-item">
+                            <a href = "{{ url_for('auth.contact') }}" class = 'nav-link'>Contact</a>
+                        </li>
+                         <li class = "nav-item">
+                            <a href = "{{ url_for('auth.itinerary') }}" class = 'nav-link'>Itinerary</a>
+                        </li>
+                         <li class = "nav-item">
+                         <a href="/logout"><button type="button" style=" background-color: #1c3464" class = 'nav-link' id="logoutButton">Logout</button></a>
+                        </li>
+                    </ul>
+                    </ul>
+                </div>
+            </div>
+        </nav><br><br><br><br><br><br><br><br>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <div class="alert alert-danger alter-dismissable fade show" role=alert>
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% else %}
+                <div class="alert alert-success alter-dismissable fade show" role=alert>
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+    <h1>User Itinerary</h1>
+    <div class="back-btn-container">
+        <a href="{{ url_for('auth.recommendation_results') }}"><button class='back-btn'>Go Back To Results Page</button></a>
+    </div>
+    <ul class="itinerary-container">
+        {% for itinerary in itineraries %}
+            <li class="itinerary-item">
+                <h3>{{ itinerary.name }}</h3>
+                <p><strong>Address:</strong> {{ itinerary.address }}</p>
+                <p><strong>Start Date:</strong> {{ itinerary.start_date }}</p>
+                <p><strong>End Date:</strong> {{ itinerary.end_date }}</p>
+                <p><strong>Members:</strong>{{ itinerary.members }}</p>
+
+                <form method="POST">
+                    <input type = "hidden" name="itinerary_id" value="{{ itinerary.id }}">
+                    <div class="delete-btn-container">
+                        <button class="delete-btn" type="submit">Delete</button>
+                    </div>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    <p class="key_phrase">Your Key Phrase: {{ user.key_phrase }}</p>
+</body>
+</html>
